@@ -5,10 +5,12 @@ plugins {
 group 'net.loevig'
 version '1.0.0'
 
+sourceCompatibility = 14
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.5.2"
 }
