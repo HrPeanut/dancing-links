@@ -50,8 +50,8 @@ class ColumnNode<E> extends Node<E> {
         this.right.left = this.left;
         this.left.right = this.right;
 
-        for (Node<E> i = this.down; i != this; i = i.down) {
-            for (Node<E> j = i.right; j != i; j = j.right) {
+        for (var i = this.down; i != this; i = i.down) {
+            for (var j = i.right; j != i; j = j.right) {
                 j.down.up = j.up;
                 j.up.down = j.down;
                 j.column.size--;
@@ -68,8 +68,8 @@ class ColumnNode<E> extends Node<E> {
     protected void uncover() {
         this.root.size++;
 
-        for (Node<E> i = this.up; i != this; i = i.up) {
-            for (Node<E> j = i.left; j != i; j = j.left) {
+        for (var i = this.up; i != this; i = i.up) {
+            for (var j = i.left; j != i; j = j.left) {
                 j.column.size++;
                 j.down.up = j;
                 j.up.down = j;

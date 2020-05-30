@@ -43,14 +43,4 @@ public class Solution<E> implements Iterable<Node<E>> {
     public Iterator<Node<E>> iterator() {
         return nodes.iterator();
     }
-
-    @Override
-    public void forEach(Consumer<? super Node<E>> action) {
-        nodes.forEach(action);
-    }
-
-    @Override
-    public Spliterator<Node<E>> spliterator() {
-        return nodes.spliterator();
-    }
 }
