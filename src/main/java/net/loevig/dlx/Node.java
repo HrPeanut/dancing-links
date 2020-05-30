@@ -3,8 +3,11 @@ package net.loevig.dlx;
 /**
  * Node represents a single value in the Dancing Links structure. Each node
  * links to the next and previous node in the row and column linked list.
+ *
+ * @author Anders Løvig
  */
 public class Node<E> {
+
     /**
      * The value contained in this node.
      */
@@ -31,10 +34,10 @@ public class Node<E> {
     protected Node<E> up;
 
     /**
-     * A direct link to the first node in the column.
+     * Direct link to the first node in the column.
      * This link is used for optimizing Knuth's Algorithm X.
      */
-    protected DancingLinks.ColumnNode<E> column;
+    protected ColumnNode<E> column;
 
     /**
      * Creates a new Node. The new node is its own next and previous nodes
@@ -42,8 +45,8 @@ public class Node<E> {
      * @param column the column node.
      * @param value the node value.
      */
-    protected Node(DancingLinks.ColumnNode<E> column, E value) {
-        right = left = down = up = this;
+    protected Node(ColumnNode<E> column, E value) {
+        this.right = this.left = this.down = this.up = this;
         this.column = column;
         this.value = value;
     }
@@ -89,6 +92,6 @@ public class Node<E> {
         node.up = this;
         this.down = node;
 
-        column.size++;
+        this.column.size++;
     }
 }

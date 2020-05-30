@@ -13,6 +13,7 @@ import java.util.function.Consumer;
  * @author Anders Løvig
  */
 public class Solution<E> implements Iterable<Node<E>> {
+
     /**
      * List of nodes, which is the solution.
      */

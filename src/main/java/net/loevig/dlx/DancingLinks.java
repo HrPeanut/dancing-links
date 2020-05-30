@@ -18,26 +18,6 @@ import java.util.ArrayList;
 public class DancingLinks<E> {
 
     /**
-     * Column node represents
-     */
-    static class ColumnNode<E> extends Node<E> {
-        /**
-         * The number of nodes in the column linked list excluding this node.
-         */
-        int size;
-
-        /**
-         * Create a new ColumnNode. The new node have size 0 and is its own
-         * next and previous node.
-         */
-        public ColumnNode() {
-            super(null, null);
-            super.column = this;
-            size = 0;
-        }
-    }
-
-    /**
      * The first node in the data structure.
      */
     ColumnNode<E> root;
@@ -64,12 +44,12 @@ public class DancingLinks<E> {
 
         int colLength = values[0].length;
 
-        Node<E> prev = root = new ColumnNode<>();
+        Node<E> prev = this.root = new ColumnNode<>(null);
         var columns = new ArrayList<ColumnNode<E>>(colLength);
 
         // Create column nodes and insert them to the right of root.
         for (int col = 0; col < colLength; col++) {
-            var node = new ColumnNode<E>();
+            var node = new ColumnNode<E>(root);
             columns.add(node);
             prev.insertRight(node);
             prev = node;

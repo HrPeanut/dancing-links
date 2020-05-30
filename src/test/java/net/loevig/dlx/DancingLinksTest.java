@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DancingLinksTest {
 
-    private int countRight(Node<Integer> node) {
+    static int countRight(Node<Integer> node) {
         int size = 0;
         for (var n = node.right; n != node; n = n.right) {
             size++;
@@ -14,7 +14,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countLeft(Node<Integer> node) {
+    static int countLeft(Node<Integer> node) {
         int size = 0;
         for (var n = node.left; n != node; n = n.left) {
             size++;
@@ -22,7 +22,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countDown(Node<Integer> node) {
+    static int countDown(Node<Integer> node) {
         int size = 0;
         for (var n = node.down; n != node; n = n.down) {
             size++;
@@ -30,7 +30,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countUp(Node<Integer> node) {
+    static int countUp(Node<Integer> node) {
         int size = 0;
         for (var n = node.up; n != node; n = n.up) {
             size++;
@@ -59,10 +59,11 @@ public class DancingLinksTest {
         // Root should not have any down nodes
         assertEquals(0, countDown(dl.root));
         // There should be 1 column
+        assertEquals(1, dl.root.size);
         assertEquals(1, countRight(dl.root));
         // The column should have one row
         assertEquals(1, countDown(dl.root.right));
-        assertEquals(1, ((DancingLinks.ColumnNode<Integer>) dl.root.right).size);
+        assertEquals(1, ((ColumnNode<Integer>) dl.root.right).size);
     }
 
     @Test
@@ -106,6 +107,7 @@ public class DancingLinksTest {
         Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(2, countRight(node));
+        assertEquals(2, dl.root.size);
 
         node = node.right;
         assertEquals(1, countDown(node));
@@ -125,10 +127,11 @@ public class DancingLinksTest {
         Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(1, countRight(node));
+        assertEquals(1, dl.root.size);
 
         node = node.right;
         assertEquals(2, countDown(node));
-        assertEquals(2, ((DancingLinks.ColumnNode<Integer>) dl.root.right).size);
+        assertEquals(2, ((ColumnNode<Integer>) dl.root.right).size);
 
         node = node.down;
         assertEquals(3, node.get()); // Value of row 1
@@ -145,6 +148,7 @@ public class DancingLinksTest {
         Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(2, countRight(node));
+        assertEquals(2, dl.root.size);
 
         node = node.right; // 1. column
         assertEquals(2, countDown(node));
@@ -172,6 +176,7 @@ public class DancingLinksTest {
         });
         Node<Integer> node = dl.root;
         assertEquals(3, countRight(node));
+        assertEquals(3, dl.root.size);
 
         // Check each column nodes first
         node = node.right; // 1. col
