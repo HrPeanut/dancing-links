@@ -1,5 +1,8 @@
 package net.loevig.dlx;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Implementation of the Dancing Links structure. This structure is used by
  * Knuth's Algorithm X, to find all solutions to exact cover problems.
@@ -132,27 +135,67 @@ public class DancingLinks<E> {
      */
     ColumnNode root;
 
+    /**
+     * Creates a new DancingLinks structure from the given matrix of values.
+     * Each value in the matrix is represented as a node in the dancing links
+     * structure.
+     *
+     * If a value in {@code values} is {@code null}, then a node is not created
+     * for that index. Then the next and previous nodes will skip this row and
+     * column in the linked lists.
+     *
+     * The provided {@code values} must not be {@code null} and must not be the
+     * an empty array.
+     *
+     * @param values the values to base the dancing links structure on.
+     */
     public DancingLinks(E[][] values) {
-        root = new ColumnNode();
-
+        if (values == null) {
+            throw new NullPointerException("values is null");
+        }
         if (values.length == 0 || values[0].length == 0) {
             // Cannot create links without elements.
-            return;
+            throw new IllegalArgumentException("values is empty");
         }
 
-        Node prev = root;
-        for (int col = 0; col < values[0].length; col++) {
-            // Create and insert the column node first.
-            var c = new ColumnNode();
-            prev.insertRight(c);
+        int colLength = values[0].length;
 
-            for (int row = 0; row < values.length; row++) {
-                if (values[0].length != values[row].length) {
-                    throw new IllegalArgumentException("rows must have same size");
+        Node prev = root = new ColumnNode();
+        List<ColumnNode> columns = new ArrayList<>(colLength);
+
+        // Create column nodes and insert them to the right of root.
+        for (int col = 0; col < colLength; col++) {
+            var node = new ColumnNode();
+            columns.add(node);
+            prev.insertRight(node);
+            prev = node;
+        }
+
+        // Now create rows and insert them
+        for (E[] row : values) {
+            prev = null;
+
+            for (int col = 0; col < colLength; col++) {
+                // Each row must have equal columns
+                if (row.length != colLength) {
+                    throw new IllegalArgumentException("rows must have equal length");
+                }
+                var val = row[col];
+                if (val == null) {
+                    continue;
                 }
 
-                var n = new Node(c, values[col][row]);
-                c.insertDown(n);
+                var column = columns.get(col);
+                var node = new Node(column, val);
+
+                if (prev == null) {
+                    // node is the first in current row.
+                    prev = node;
+                }
+
+                column.up.insertDown(node);
+                prev.insertRight(node);
+                prev = node;
             }
         }
     }
