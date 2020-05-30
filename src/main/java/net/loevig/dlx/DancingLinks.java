@@ -1,7 +1,6 @@
 package net.loevig.dlx;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implementation of the Dancing Links structure. This structure is used by
@@ -17,103 +16,11 @@ import java.util.List;
  * @see <a href="https://arxiv.org/abs/cs/0011047">Donald Knuth: Dancing Links</a>
  */
 public class DancingLinks<E> {
-    /**
-     * Node represents a single value in the Dancing Links structure. Each node
-     * links to the next and previous node in the row and column linked list.
-     */
-    class Node {
-        /**
-         * The value contained in this node.
-         */
-        private E value;
-
-        /**
-         * The next node in the row linked list.
-         */
-        Node right;
-
-        /**
-         * The previous node in the row linked list.
-         */
-        Node left;
-
-        /**
-         * The next node in the column linked list.
-         */
-        Node down;
-
-        /**
-         * The previous node in the column linked list.
-         */
-        Node up;
-
-        /**
-         * A direct link to the first node in the column.
-         * This link is used for optimizing Knuth's Algorithm X.
-         */
-        ColumnNode column;
-
-        /**
-         * Creates a new Node. The new node is its own next and previous nodes
-         * in its row and column linked list.
-         * @param column the column node.
-         * @param value the node value.
-         */
-        public Node(ColumnNode column, E value) {
-            right = left = down = up = this;
-            this.column = column;
-            this.value = value;
-        }
-
-        /**
-         * Returns the value of this node.
-         *
-         * @return the value of this node.
-         */
-        public E get() {
-            return value;
-        }
-
-        /**
-         * Sets the value of this node.
-         *
-         * @param value the value of this node.
-         */
-        public void set(E value) {
-            this.value = value;
-        }
-
-        /**
-         * Inserts {@code node} as the right node of this node.
-         *
-         * @param node the node to insert.
-         */
-        void insertRight(Node node) {
-            node.right = this.right;
-            node.right.left = node;
-            node.left = this;
-            this.right = node;
-        }
-
-        /**
-         * Inserts {@code node} as the down node of this node.
-         *
-         * @param node the node to insert.
-         */
-        protected void insertDown(Node node) {
-            node.down = this.down;
-            node.down.up = node;
-            node.up = this;
-            this.down = node;
-
-            column.size++;
-        }
-    }
 
     /**
      * Column node represents
      */
-    class ColumnNode extends Node {
+    static class ColumnNode<E> extends Node<E> {
         /**
          * The number of nodes in the column linked list excluding this node.
          */
@@ -133,7 +40,7 @@ public class DancingLinks<E> {
     /**
      * The first node in the data structure.
      */
-    ColumnNode root;
+    ColumnNode<E> root;
 
     /**
      * Creates a new DancingLinks structure from the given matrix of values.
@@ -150,9 +57,6 @@ public class DancingLinks<E> {
      * @param values the values to base the dancing links structure on.
      */
     public DancingLinks(E[][] values) {
-        if (values == null) {
-            throw new NullPointerException("values is null");
-        }
         if (values.length == 0 || values[0].length == 0) {
             // Cannot create links without elements.
             throw new IllegalArgumentException("values is empty");
@@ -160,12 +64,12 @@ public class DancingLinks<E> {
 
         int colLength = values[0].length;
 
-        Node prev = root = new ColumnNode();
-        List<ColumnNode> columns = new ArrayList<>(colLength);
+        Node<E> prev = root = new ColumnNode<>();
+        var columns = new ArrayList<ColumnNode<E>>(colLength);
 
         // Create column nodes and insert them to the right of root.
         for (int col = 0; col < colLength; col++) {
-            var node = new ColumnNode();
+            var node = new ColumnNode<E>();
             columns.add(node);
             prev.insertRight(node);
             prev = node;
@@ -186,7 +90,7 @@ public class DancingLinks<E> {
                 }
 
                 var column = columns.get(col);
-                var node = new Node(column, val);
+                var node = new Node<>(column, val);
 
                 if (prev == null) {
                     // node is the first in current row.
@@ -199,4 +103,6 @@ public class DancingLinks<E> {
             }
         }
     }
+
+
 }

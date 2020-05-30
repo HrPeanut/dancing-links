@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DancingLinksTest {
 
-    private int countRight(DancingLinks<Integer>.Node node) {
+    private int countRight(Node<Integer> node) {
         int size = 0;
         for (var n = node.right; n != node; n = n.right) {
             size++;
@@ -14,7 +14,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countLeft(DancingLinks<Integer>.Node node) {
+    private int countLeft(Node<Integer> node) {
         int size = 0;
         for (var n = node.left; n != node; n = n.left) {
             size++;
@@ -22,7 +22,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countDown(DancingLinks<Integer>.Node node) {
+    private int countDown(Node<Integer> node) {
         int size = 0;
         for (var n = node.down; n != node; n = n.down) {
             size++;
@@ -30,7 +30,7 @@ public class DancingLinksTest {
         return size;
     }
 
-    private int countUp(DancingLinks<Integer>.Node node) {
+    private int countUp(Node<Integer> node) {
         int size = 0;
         for (var n = node.up; n != node; n = n.up) {
             size++;
@@ -40,8 +40,6 @@ public class DancingLinksTest {
 
     @Test
     public void invalidMatrix() {
-        // Cannot create DL from a null matrix
-        assertThrows(NullPointerException.class, () -> new DancingLinks<>(null));
         // Cannot create DL if matrix is empty
         assertThrows(IllegalArgumentException.class, () -> new DancingLinks<>(new Integer[0][0]));
 
@@ -64,7 +62,7 @@ public class DancingLinksTest {
         assertEquals(1, countRight(dl.root));
         // The column should have one row
         assertEquals(1, countDown(dl.root.right));
-        assertEquals(1, ((DancingLinks<Integer>.ColumnNode) dl.root.right).size);
+        assertEquals(1, ((DancingLinks.ColumnNode<Integer>) dl.root.right).size);
     }
 
     @Test
@@ -105,7 +103,7 @@ public class DancingLinksTest {
         var dl = new DancingLinks<>(new Integer[][] {
                 { 4, 7 }
         });
-        DancingLinks<Integer>.Node node = dl.root;
+        Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(2, countRight(node));
 
@@ -124,13 +122,13 @@ public class DancingLinksTest {
                 { 3 },
                 { 6 }
         });
-        DancingLinks<Integer>.Node node = dl.root;
+        Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(1, countRight(node));
 
         node = node.right;
         assertEquals(2, countDown(node));
-        assertEquals(2, ((DancingLinks<Integer>.ColumnNode) dl.root.right).size);
+        assertEquals(2, ((DancingLinks.ColumnNode<Integer>) dl.root.right).size);
 
         node = node.down;
         assertEquals(3, node.get()); // Value of row 1
@@ -144,7 +142,7 @@ public class DancingLinksTest {
                 { 2, 5 },
                 { 9, 1 }
         });
-        DancingLinks<Integer>.Node node = dl.root;
+        Node<Integer> node = dl.root;
         assertEquals(0, countDown(node));
         assertEquals(2, countRight(node));
 
@@ -172,7 +170,7 @@ public class DancingLinksTest {
                 { null, null, 3 },
                 { 1, 9, 3 }
         });
-        DancingLinks<Integer>.Node node = dl.root;
+        Node<Integer> node = dl.root;
         assertEquals(3, countRight(node));
 
         // Check each column nodes first
@@ -209,5 +207,13 @@ public class DancingLinksTest {
         assertEquals(9, node.get());
         node = node.left; // 3. row, 1. col
         assertEquals(1, node.get());
+    }
+
+    @Test
+    public void genericString() {
+        var dl = new DancingLinks<>(new String[][] {
+                { "hello"}
+        });
+        assertEquals("hello", dl.root.right.down.get());
     }
 }
